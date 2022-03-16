@@ -17,7 +17,7 @@ export const Nav = () => {
     const me = useSelector(selectMyInfo);
 
     useEffect(() => {
-        if (!localStorage.getItem('token')) {
+        if (!localStorage.getItem('token') && !(location.pathname.includes('/auth') || location.pathname.includes('/registry'))) {
             navigate('/auth')
         }
         dispatch(fetchMyUserInfo())
@@ -27,9 +27,11 @@ export const Nav = () => {
         console.log('!! location: ', location);
     }, [location]);
 
-    if (location.pathname.includes('/auth')) {
+    if (location.pathname.includes('/auth') || location.pathname.includes('/registry')) {
+
         return <></>
     }
+
     return (
         <Layout>
             <Header className="header">
@@ -43,6 +45,7 @@ export const Nav = () => {
                 >
                     <Menu.Item key="/me"><Link to="/me">Моя страница</Link></Menu.Item>
                     <Menu.Item key="/chats"><Link to="/chats">Чаты</Link></Menu.Item>
+                    <Menu.Item key="/users"><Link to="/users">Пользователи</Link></Menu.Item>
                     <Menu.Item key="3">Каналы</Menu.Item>
                 </Menu>
                 <Link to="/me">

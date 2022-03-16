@@ -3,23 +3,30 @@ import 'antd/dist/antd.css';
 import { Layout, Menu } from 'antd';
 import {useEffect} from "react";
 import "./style.scss"
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {Avatar} from "../common/avatar/avatar";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchUsers, selectUsers, socketConnect} from "../../store/chat/chat.slice";
 
 const { Sider } = Layout;
-
 export const SideBar = () => {
     const navigate = useNavigate();
 
     const users = useSelector(selectUsers)
     const dispatch = useDispatch()
 
+    const location = useLocation()
+    const [selectedKey, setSelectedKey] = React.useState('')
+
     useEffect(() => {
+        console.log(location.pathname)
+        if(location.search)
+            setSelectedKey(location.search.substring(1))
         dispatch(socketConnect())
         dispatch(fetchUsers())
     }, [])
+
+
 
     // useEffect(() => {
     //     if (!users.length) {
@@ -28,7 +35,6 @@ export const SideBar = () => {
     //     setSelectedKey(users[0]?.public_id || '')
     // }, [users]);
 
-    const [selectedKey, setSelectedKey] = React.useState('')
 
     useEffect(() => {
         console.log(selectedKey)

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import 'antd/dist/antd.css';
 import "./style.scss"
 import {Button, Card, Form, Input} from 'antd';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {authAsync, selectAuthLoading, selectMyInfo} from "../../store/auth/auth.slice";
 
@@ -49,19 +49,22 @@ export const Auth = () => {
                     >
                         <Input.Password />
                     </Form.Item>
+                    <div className="auth_button_container">
+                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                            <Button type="primary" htmlType="submit">
+                                Вход
+                            </Button>
+                        </Form.Item>
+                        <Form.Item >
+                            <Link to="/registry">
+                                <div>
+                                    Регистрация
+                                </div>
+                            </Link>
+                        </Form.Item>
 
-                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
+                    </div>
                 </Form>
-                {/*<Input placeholder="input login" />*/}
-                {/*<Input.Password*/}
-                {/*    placeholder="input password"*/}
-                {/*    iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}*/}
-                {/*/>*/}
-                {/*<button className="auth_btn">Войти</button>*/}
             </Card>
        </div>
     );

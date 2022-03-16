@@ -15,4 +15,8 @@
     text-align: center;
     margin-top: 20px;
   }
+  &_button_container{
+    display: flex;
+    justify-content: space-between;
+  }
 }

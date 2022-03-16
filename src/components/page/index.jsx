@@ -11,8 +11,9 @@ import {
     Navigate
 } from "react-router-dom";
 import {RequireAuth} from "../common/require-auth/require-auth";
+import {Registry} from "../registry";
+import {Users} from "../pages/users";
 
-console.log(window.location.href.split("/")[3])
 export const Page = () => {
     return (
             <Layout>
@@ -27,6 +28,8 @@ export const Page = () => {
                         </RequireAuth>
                     )}/>
                     <Route path="/auth" element={<Auth/>}/>
+                    <Route path="/users" element={<Users/>}/>
+                    <Route path="/registry" element={<Registry/>}/>
                     <Route path="/me" element={(
                         <RequireAuth>
                             <PersonalArea/>

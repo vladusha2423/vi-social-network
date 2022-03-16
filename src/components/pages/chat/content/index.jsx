@@ -32,6 +32,7 @@ export const ChatContent = () => {
             return [];
         }
         return rawMessages.map((msg) => {
+
             return {
                 name: msg.from === me.public_id ? me.name : userInfo.name,
                 text: msg.text,
@@ -49,24 +50,29 @@ export const ChatContent = () => {
 
     const msgRef = useRef(null)
 
+    const [msgValue, setMsgValue] = useState("")
+
     const onSearch = text => {
-        dispatch(sendMessage({
-            text,
-            to,
-            from: me.public_id
-        }))
-        console.log({
-            text,
-            to,
-            from: me.public_id
-        })
-        msgRef.current.scrollTo(0,msgRef.current.scrollHeight)
-        console.log(msgRef.current.scrollHeight)
+        if(text !== "") {
+            dispatch(sendMessage({
+                text,
+                to,
+                from: me.public_id
+            }))
+            // console.log({
+            //     text,
+            //     to,
+            //     from: me.public_id
+            // })
+            msgRef.current.scrollTo(0, msgRef.current.scrollHeight)
+            setMsgValue("")
+            console.log(msgRef.current.scrollHeight)
+        }
     };
 
     useEffect(() => {
         msgRef.current.scrollTo(0,msgRef.current.scrollHeight)
-    }, [])
+    }, [messages])
 
     return (
         <div className="chat">
@@ -83,7 +89,9 @@ export const ChatContent = () => {
                     allowClear
                     enterButton="Send"
                     size="large"
+                    value={msgValue}
                     onSearch={onSearch}
+                    onChange={(e) => {setMsgValue(e.target.value)}}
                 />
             </div>
         </div>

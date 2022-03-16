@@ -49,6 +49,20 @@ export const authAsync = (creds) => async (dispatch) => {
         // errorHandler(error)
     }
 }
+// Thunk register async actions
+export const registerAsync = (creds) => async (dispatch) => {
+    dispatch(authLoading())
+    try {
+        const formData = new FormData();
+        formData.append('email', creds.email)
+        formData.append('password', creds.password)
+        formData.append('name', creds.name)
+        const response = await axios.post(`${API_URL}/api/signup`, formData)
+        dispatch(authSuccess(response.data))
+    } catch (error) {
+        // errorHandler(error)
+    }
+}
 
 export const fetchMyUserInfo = () => async (dispatch) => {
     dispatch(myUserInfoLoading())
