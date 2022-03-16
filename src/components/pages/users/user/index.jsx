@@ -7,7 +7,7 @@ import {Avatar} from "../../../common/avatar/avatar";
 export const User = (state) => {
 
     return (
-        <Link to={"/chats?" + state.state.public_id}>
+        <Link to={"/user_page?" + state.state.public_id}>
             <div className="users_user_card">
                 <div className="user">
                     <div className="user_logo">

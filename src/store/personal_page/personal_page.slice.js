@@ -4,14 +4,14 @@ import {API_URL} from "../../common/constants/url";
 import {errorHandler} from "../../utils/error-handler";
 
 const initialState = {
-    usersLoading: false,
-    persopal_page: []
+    personalPageLoading: false,
+    personal_page: []
 }
 
 
 //Reducer
 export const personalPageSlice = createSlice({
-    name: 'persopal_page',
+    name: 'personal_page',
     initialState,
     reducers: {
         personalPageLoading(state, _action) {
@@ -19,7 +19,7 @@ export const personalPageSlice = createSlice({
         },
         personalPageReceived(state, action) {
             state.personalPageLoading = false
-            state.persopal_page = action.payload
+            state.personal_page = action.payload
         },
     }
 })
@@ -28,10 +28,10 @@ export const personalPageSlice = createSlice({
 export const { personalPageLoading, personalPageReceived } = personalPageSlice.actions
 
 
-export const fetchpersonalPage = () => async (dispatch) => {
+export const fetchPersonalPage = (search_id) => async (dispatch) => {
     dispatch(personalPageLoading())
     try {
-        const response = await axios.get(`${API_URL}/api/users/me`, {
+        const response = await axios.get(`${API_URL}/api/users/${search_id}`, {
             headers: {
                 'x-access-token': localStorage.getItem('token')
             }
@@ -44,11 +44,11 @@ export const fetchpersonalPage = () => async (dispatch) => {
 
 
 // Selectors
-const selectpersonalPageState = (state) => state.persopal_page;
-const selectpersonalPage = createSelector([selectpersonalPageState], persopal_page =>
-    persopal_page.persopal_page
+const selectPersonalPageState = (state) => state.personal_page;
+const selectPersonalPage = createSelector([selectPersonalPageState], personal_page =>
+    personal_page.personal_page
 );
 
-export { selectpersonalPageState, selectpersonalPage};
+export { selectPersonalPageState, selectPersonalPage};
 
 export default personalPageSlice.reducer

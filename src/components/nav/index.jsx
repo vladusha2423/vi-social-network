@@ -46,7 +46,7 @@ export const Nav = () => {
                     <Menu.Item key="/me"><Link to="/me">Моя страница</Link></Menu.Item>
                     <Menu.Item key="/chats"><Link to="/chats">Чаты</Link></Menu.Item>
                     <Menu.Item key="/users"><Link to="/users">Пользователи</Link></Menu.Item>
-                    <Menu.Item key="3">Каналы</Menu.Item>
+                    <Menu.Item key="/groups"><Link to="/groups">Каналы</Link></Menu.Item>
                 </Menu>
                 <Link to="/me">
                     {me && (

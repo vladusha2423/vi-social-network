@@ -13,6 +13,7 @@ import {
 import {RequireAuth} from "../common/require-auth/require-auth";
 import {Registry} from "../registry";
 import {Users} from "../pages/users";
+import {Groups} from "../pages/groups";
 
 export const Page = () => {
     return (
@@ -28,8 +29,10 @@ export const Page = () => {
                         </RequireAuth>
                     )}/>
                     <Route path="/auth" element={<Auth/>}/>
+                    <Route path="/groups" element={<Groups/>}/>
                     <Route path="/users" element={<Users/>}/>
                     <Route path="/registry" element={<Registry/>}/>
+                    <Route path="/user_page" element={<PersonalArea/>}/>
                     <Route path="/me" element={(
                         <RequireAuth>
                             <PersonalArea/>
