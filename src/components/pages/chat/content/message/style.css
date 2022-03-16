@@ -1,0 +1,36 @@
+.message {
+  max-width: 80%;
+  min-height: 80px;
+  border: 1px solid #999999;
+  border-radius: 5px;
+  background: #CCCCCC;
+  padding: 5px;
+  margin: 10px;
+  word-break: break-all;
+  min-width: 20%;
+}
+
+.message_container {
+  display: flex;
+}
+
+.message_my {
+  background: #61dafb;
+}
+
+.message_my_container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message_sender_my {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message_text_my {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/*# sourceMappingURL=style.css.map */
