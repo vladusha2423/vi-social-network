@@ -3,6 +3,8 @@ import axios from "axios";
 import {API_URL} from "../../common/constants/url";
 import {errorHandler} from "../../utils/error-handler";
 import {authLoading, authSuccess} from "../auth/auth.slice";
+import {fetchGroup} from "../group/group.slice";
+import {fetchMyGroups} from "../myGroups/myGroups.slice";
 
 const initialState = {
     groupMessagesLoading: false,
@@ -53,11 +55,27 @@ export const sendPostAsync = (creds, id) => async (dispatch) => {
     try {
         const response = await axios.post(`${API_URL}/api/groups/${id}/posts`, creds,
             {
-            headers: {
-                'x-access-token': localStorage.getItem('token')
-            }
-        })
+                headers: {
+                    'x-access-token': localStorage.getItem('token')
+                }
+            })
         dispatch(addGroupMessage(response.data))
+
+    } catch (error) {
+        // errorHandler(error)
+    }
+}
+export const subscribeAsync = (id) => async (dispatch) => {
+
+    try {
+        const response = await axios.post(`${API_URL}/api/groups/${id}/subscribe`, "",
+            {
+                headers: {
+                    'x-access-token': localStorage.getItem('token')
+                }
+            })
+        dispatch(fetchGroup(id))
+        dispatch(fetchMyGroups())
 
     } catch (error) {
         // errorHandler(error)

@@ -13,6 +13,7 @@ export const FeedElement = (state) => {
                 <div className="feed_element_msg_author">{states.title}</div>
                 <div className="feed_element_msg_text">{states.text}</div>
             </div>
+
         </div>
     );
 }

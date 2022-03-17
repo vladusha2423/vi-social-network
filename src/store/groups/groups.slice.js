@@ -49,12 +49,11 @@ export const fetchGroups = () => async (dispatch) => {
 // Selectors
 const selectGroupsState = (state) => state.groups;
 const selectGroups = createSelector([selectGroupsState], (groups) => {
-    console.log(groups)
-    return groups.groups
+        console.log(groups)
+        return groups.groups
     }
 );
 
 export { selectGroupsState, selectGroups};
 
 export default groupsSlice.reducer
-

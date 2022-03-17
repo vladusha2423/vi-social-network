@@ -7,7 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     fetchGroupMessages,
     selectGroupMessages,
-    sendPostAsync
+    sendPostAsync,
+    subscribeAsync
 } from "../../../../store/groupMessages/groupMessages.slice";
 import {fetchGroup, selectGroup} from "../../../../store/group/group.slice";
 import {selectMyInfo} from "../../../../store/auth/auth.slice";
@@ -62,11 +63,24 @@ export const GroupContent = () => {
         dispatch(sendPostAsync(value, group_info.public_id))
     }
 
+
+    const onSubscribe = () => {
+        dispatch(subscribeAsync(group_info.public_id))
+    }
+    if(location.search)
     return (
         <div className="feed">
             <div className="feed_info_card">
                 <div className="feed_info_container">
-                    <h3 className="feed_info_name">{group_info.name}</h3>
+                    <div className="feed_info_inline_container">
+                        <h3 className="feed_info_name">{group_info.name}</h3>
+                        {!group_info.subscribed &&
+                             <Button onClick={() => {onSubscribe()}}>Подписаться</Button>
+                        }
+                        {group_info.subscribed &&
+                            <Button disabled>Подписка оформлена</Button>
+                        }
+                    </div>
                     <p className="feed_info_description">{group_info.description}</p>
                 </div>
 
@@ -109,4 +123,8 @@ export const GroupContent = () => {
             </div>
         </div>
     );
+    else
+        return (
+            <></>
+        )
 }
