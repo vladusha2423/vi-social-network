@@ -46,7 +46,7 @@ export const SideBar = () => {
     }
 
     return (
-            <Sider width={400} className="site-layout-background">
+            <Sider width={400} className="site-layout-background chat-sidebar">
                 <Menu
                     mode="inline"
                     selectedKeys={[selectedKey]}

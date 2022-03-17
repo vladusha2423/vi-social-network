@@ -1,23 +1,30 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import 'antd/dist/antd.css';
 import { Input} from 'antd';
 import {Message} from "./message";
 import {useState} from "react";
 import {useRef} from "react";
 import {useEffect} from "react";
-import {API_URL} from "../../../../common/constants/url";
-import axios from "axios";
 import {useLocation} from "react-router-dom";
-import {fetchMessages, selectMessagesByUser, selectUserInfo, sendMessage} from "../../../../store/chat/chat.slice";
+import {
+    fetchMessages,
+    selectMessagesByUser,
+    selectUserInfo,
+    sendAudioAsync,
+    sendMessage
+} from "../../../../store/chat/chat.slice";
 import {useDispatch, useSelector} from "react-redux";
 import {selectMyInfo} from "../../../../store/auth/auth.slice";
-
+import Record from "../../../record/record.component";
+import {useAudio} from "../../../../common/hooks/audio";
+import {SendOutlined} from "@ant-design/icons";
 
 const { Search } = Input;
 
 export const ChatContent = () => {
     const location = useLocation()
     const dispatch = useDispatch()
+    const [play] = useAudio();
 
     const to = useMemo(() => {
         return location.search.slice(1);
@@ -36,6 +43,7 @@ export const ChatContent = () => {
             return {
                 name: msg.from === me.public_id ? me.name : userInfo.name,
                 text: msg.text,
+                voice: msg.voice,
                 mine: msg.from === me.public_id
             }
         })
@@ -74,6 +82,11 @@ export const ChatContent = () => {
         msgRef.current.scrollTo(0,msgRef.current.scrollHeight)
     }, [messages])
 
+    const handleAudio = useCallback((file) => {
+        play(file)
+        dispatch(sendAudioAsync(file, to, me.public_id))
+    }, [play, dispatch, me, to]);
+
     return (
         <div className="chat">
             <div className="messages" id="msgs" ref={msgRef}>
@@ -83,16 +96,17 @@ export const ChatContent = () => {
                     )
                 })}
             </div>
-            <div className="input_area">
+            <div className="chat__input-area">
                 <Search
                     placeholder="input search text"
                     allowClear
-                    enterButton="Send"
+                    enterButton={<SendOutlined />}
                     size="large"
                     value={msgValue}
                     onSearch={onSearch}
                     onChange={(e) => {setMsgValue(e.target.value)}}
                 />
+                <Record onAudio={handleAudio} />
             </div>
         </div>
     );

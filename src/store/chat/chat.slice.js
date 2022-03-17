@@ -7,7 +7,9 @@ import {errorHandler} from "../../utils/error-handler";
 const initialState = {
     conversations: [],
     usersLoading: false,
-    messagesLoading: false
+    messagesLoading: false,
+    sendAudioLoading: false,
+    recognizeLoading: false
 }
 
 const socket = io(IO_URL, {
@@ -21,7 +23,7 @@ export const chatSlice = createSlice({
     initialState,
     reducers: {
         sendMessage(state, action) {
-            const { text, to, from } = action.payload;
+            const { text, to, from, voice } = action.payload;
             const converseIndex = current(state.conversations).findIndex((c) => c.user.public_id === to);
             if (converseIndex >= 0) {
                 state.conversations[converseIndex].messages = [
@@ -29,12 +31,14 @@ export const chatSlice = createSlice({
                     {
                         from,
                         to,
-                        text
+                        text,
+                        voice
                     }
                 ]
                 socket.emit('json', {
                     text,
-                    to
+                    to,
+                    voice
                 })
             }
         },
@@ -44,6 +48,12 @@ export const chatSlice = createSlice({
         usersReceived(state, action) {
             state.usersLoading = false
             state.conversations = action.payload
+        },
+        sendAudioLoading(state, _action) {
+            state.sendAudioLoading = true
+        },
+        sendAudioReceived(state, _action) {
+            state.sendAudioLoading = false
         },
         messagesLoading(state, _action) {
             state.messagesLoading = true
@@ -57,7 +67,7 @@ export const chatSlice = createSlice({
             }
         },
         addReceivedMessage(state, action) {
-            const { text, from, to } = action.payload;
+            const { text, from, to, voice } = action.payload;
             const converseIndex = current(state.conversations).findIndex((c) => c.user.public_id === from);
             if (converseIndex >= 0) {
                 state.conversations[converseIndex].messages = [
@@ -65,7 +75,23 @@ export const chatSlice = createSlice({
                     {
                         from,
                         to,
-                        text
+                        text,
+                        voice
+                    }
+                ]
+            }
+        },
+        addSentMessage(state, action) {
+            const { text, from, to, voice } = action.payload;
+            const converseIndex = current(state.conversations).findIndex((c) => c.user.public_id === to);
+            if (converseIndex >= 0) {
+                state.conversations[converseIndex].messages = [
+                    ...state.conversations[converseIndex].messages,
+                    {
+                        from,
+                        to,
+                        text,
+                        voice
                     }
                 ]
             }
@@ -79,7 +105,10 @@ export const {
     messagesLoading,
     messagesReceived,
     sendMessage,
-    addReceivedMessage
+    addReceivedMessage,
+    sendAudioLoading,
+    sendAudioReceived,
+    addSentMessage
 } = chatSlice.actions
 
 export const socketConnect = () => (dispatch) => {
@@ -124,6 +153,36 @@ export const fetchMessages = (userId) => async (dispatch) => {
             messages: response.data,
             userId
         }))
+    } catch(error) {
+        errorHandler(error)
+    }
+}
+
+export const sendAudioAsync = (url, to, from) => async (dispatch) => {
+    dispatch(sendAudioLoading())
+    // dispatch(addSentMessage({
+    //     from,
+    //     to,
+    //     voice: url
+    // }))
+    try {
+        const fileResponse = await axios.get(url, {
+            responseType: 'blob'
+        })
+        const file = new File([fileResponse.data], 'speech');
+        const fd = new FormData();
+        fd.append('voice', file);
+        const urlResponse = await axios.post(`${API_URL}/api/messages/voice`, fd, {
+            headers: {
+                'x-access-token': localStorage.getItem('token')
+            }
+        })
+        dispatch(sendMessage({
+            to,
+            from,
+            voice: urlResponse.data
+        }))
+        dispatch(sendAudioReceived())
     } catch(error) {
         errorHandler(error)
     }

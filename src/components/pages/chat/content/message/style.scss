@@ -1,4 +1,4 @@
-.message{
+.message {
   max-width: 80%;
   min-height: 80px;
   border: 1px solid #999999;
@@ -8,6 +8,11 @@
   margin: 10px;
   word-break: break-all;
   min-width: 20%;
+
+  &__buttons {
+    display: flex;
+    align-items: center;
+  }
 }
 .message_container{
   display: flex;

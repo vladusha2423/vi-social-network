@@ -5,7 +5,15 @@
   .messages{
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 104px);
+    height: calc(100vh - 124px);
     overflow: auto;
+  }
+
+  &__input-area {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 0 8px 0 rgba(34, 60, 80, 0.2);
   }
 }
