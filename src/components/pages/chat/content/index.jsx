@@ -16,7 +16,6 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {selectMyInfo} from "../../../../store/auth/auth.slice";
 import Record from "../../../record/record.component";
-import {useAudio} from "../../../../common/hooks/audio";
 import {SendOutlined} from "@ant-design/icons";
 
 const { Search } = Input;
@@ -24,7 +23,6 @@ const { Search } = Input;
 export const ChatContent = () => {
     const location = useLocation()
     const dispatch = useDispatch()
-    const [play] = useAudio();
 
     const to = useMemo(() => {
         return location.search.slice(1);
@@ -83,9 +81,8 @@ export const ChatContent = () => {
     }, [messages])
 
     const handleAudio = useCallback((file) => {
-        play(file)
         dispatch(sendAudioAsync(file, to, me.public_id))
-    }, [play, dispatch, me, to]);
+    }, [dispatch, me, to]);
 
     return (
         <div className="chat">

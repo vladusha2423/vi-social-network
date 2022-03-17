@@ -1,13 +1,15 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useCallback, useState} from 'react';
 import 'antd/dist/antd.css';
 import "./style.scss"
 import {Button} from 'antd';
 import {useAudio} from "../../../../../common/hooks/audio";
 import {PauseOutlined} from '@ant-design/icons'
 import {API_URL} from "../../../../../common/constants/url";
+import axios from "axios";
 
 export const Message = (message) => {
     const [play, playing, toggle] = useAudio();
+    const [recognizedText, setRecognizedText] = useState('')
 
     const msg = message.message
 
@@ -15,13 +17,24 @@ export const Message = (message) => {
         if (!msg.voice) {
             return '';
         }
-        console.log('!! msg.url.slice(0, 4): ', msg.voice.slice(0, 4));
         if (msg.voice.slice(0, 4) === 'blob') {
             return msg.voice;
         }
-        console.log('!! `${API_URL}/${msg.voice}`: ', `${API_URL}/${msg.voice}`);
         return `${API_URL}/${msg.voice}`
     }, []);
+
+    const handleRecognize = useCallback(() => {
+        if (!msg.voice) {
+            return;
+        }
+        axios.get(`${API_URL}/api/recognize-speech?url=${msg.voice}`, {
+            headers: {
+                'x-access-token': localStorage.getItem('token')
+            }
+        }).then((response) => {
+            setRecognizedText(response.data)
+        })
+    }, [])
 
     // if(msg.mine)
     return (
@@ -39,6 +52,13 @@ export const Message = (message) => {
                 >
                     {msg.text}
                 </p>
+                {recognizedText && (
+                    <p
+                        className={`message_text ${msg.mine && 'message_text_my'}`}
+                    >
+                        {recognizedText}
+                    </p>
+                )}
                 {voiceUrl && (
                     <>
                         {playing ? (
@@ -60,15 +80,16 @@ export const Message = (message) => {
                                 ▶︎
                             </Button>
                         )}
+
+                        <Button
+                            type="text"
+                            className="recordButton recordButtonStart"
+                            onClick={handleRecognize}
+                        >
+                            Recognize
+                        </Button>
                     </>
                 )}
-                <Button
-                    type="text"
-                    className="recordButton recordButtonStart"
-                    // onClick={() => { play(voiceUrl) }}
-                >
-                    Recognize
-                </Button>
             </div>
         </div>
     );

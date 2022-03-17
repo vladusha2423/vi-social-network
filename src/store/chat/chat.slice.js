@@ -160,11 +160,6 @@ export const fetchMessages = (userId) => async (dispatch) => {
 
 export const sendAudioAsync = (url, to, from) => async (dispatch) => {
     dispatch(sendAudioLoading())
-    // dispatch(addSentMessage({
-    //     from,
-    //     to,
-    //     voice: url
-    // }))
     try {
         const fileResponse = await axios.get(url, {
             responseType: 'blob'
