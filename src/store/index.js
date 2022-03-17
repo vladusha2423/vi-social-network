@@ -4,6 +4,8 @@ import authReducer from "./auth/auth.slice";
 import usersReducer from "./users/users.slice";
 import personalPageReducer from "./personal_page/personal_page.slice";
 import groupsReducer from "./groups/groups.slice";
+import groupReducer from "./group/group.slice";
+import groupMessagesReducer from "./groupMessages/groupMessages.slice";
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
         auth: authReducer,
         users: usersReducer,
         personal_page: personalPageReducer,
-        groups: groupsReducer
+        groups: groupsReducer,
+        group: groupReducer,
+        groupMessages: groupMessagesReducer
     },
 })

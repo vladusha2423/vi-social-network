@@ -1,98 +1,111 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import 'antd/dist/antd.css';
-import { Input} from 'antd';
-import {Message} from "./message";
-import {useState} from "react";
-import {useRef} from "react";
-import {useEffect} from "react";
-import {API_URL} from "../../../../common/constants/url";
-import axios from "axios";
+import {FeedElement} from "./feedElement";
+import "./style.scss"
 import {useLocation} from "react-router-dom";
-import {fetchMessages, selectMessagesByUser, selectUserInfo, sendMessage} from "../../../../store/chat/chat.slice";
 import {useDispatch, useSelector} from "react-redux";
+import {
+    fetchGroupMessages,
+    selectGroupMessages,
+    sendPostAsync
+} from "../../../../store/groupMessages/groupMessages.slice";
+import {fetchGroup, selectGroup} from "../../../../store/group/group.slice";
 import {selectMyInfo} from "../../../../store/auth/auth.slice";
+import { Form, Input, InputNumber, Button } from 'antd';
 
 
-const { Search } = Input;
+export const GroupContent = () => {
 
-export const ChatContent = () => {
     const location = useLocation()
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const feedMsgs = useSelector(selectGroupMessages);
+    const group_info = useSelector(selectGroup);
 
-    const to = useMemo(() => {
+    const me =  useSelector(selectMyInfo)
+
+    const search_id = useMemo(() => {
         return location.search.slice(1);
     }, [location]);
 
-    const rawMessages = useSelector(selectMessagesByUser(to))
-    const userInfo = useSelector(selectUserInfo(to))
-    const me = useSelector(selectMyInfo)
+    useEffect(() => {
+        dispatch(fetchGroupMessages(search_id))
+        dispatch(fetchGroup(search_id))
+    },[dispatch, location, search_id])
 
-    const messages = useMemo(() => {
-        if (!rawMessages || !me || !userInfo) {
-            return [];
-        }
-        return rawMessages.map((msg) => {
-
-            return {
-                name: msg.from === me.public_id ? me.name : userInfo.name,
-                text: msg.text,
-                mine: msg.from === me.public_id
-            }
-        })
-    }, [rawMessages, userInfo, to]);
 
     useEffect(() => {
-        if (!to) {
-            return;
-        }
-        dispatch(fetchMessages(to))
-    }, [to]);
+        console.log(feedMsgs)
+    },[feedMsgs])
 
-    const msgRef = useRef(null)
+    useEffect(() => {
+        console.log(me)
+    },[me])
 
-    const [msgValue, setMsgValue] = useState("")
+    useEffect(() => {
+        console.log(group_info)
+    },[group_info])
 
-    const onSearch = text => {
-        if(text !== "") {
-            dispatch(sendMessage({
-                text,
-                to,
-                from: me.public_id
-            }))
-            // console.log({
-            //     text,
-            //     to,
-            //     from: me.public_id
-            // })
-            msgRef.current.scrollTo(0, msgRef.current.scrollHeight)
-            setMsgValue("")
-            console.log(msgRef.current.scrollHeight)
-        }
+
+
+    const layout = {
+        labelCol: {
+            span: 8,
+        },
+        wrapperCol: {
+            span: 16,
+        },
     };
+    /* eslint-disable no-template-curly-in-string */
 
-    useEffect(() => {
-        msgRef.current.scrollTo(0,msgRef.current.scrollHeight)
-    }, [messages])
+    const onFinish = (value) => {
+        console.log(value)
+        dispatch(sendPostAsync(value, group_info.public_id))
+    }
 
     return (
-        <div className="chat">
-            <div className="messages" id="msgs" ref={msgRef}>
-                {messages && messages.map((message, index) => {
+        <div className="feed">
+            <div className="feed_info_card">
+                <div className="feed_info_container">
+                    <h3 className="feed_info_name">{group_info.name}</h3>
+                    <p className="feed_info_description">{group_info.description}</p>
+                </div>
+
+                <Form {...layout} name="nest-messages" onFinish={onFinish} >
+                    <Form.Item
+                        name={"title"}
+                        label="Заголовок"
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name={"text"}
+                        label="Текст"
+                        rules={[
+                            {
+                                required: true,
+                            },
+                    ]}>
+                        <Input.TextArea />
+                    </Form.Item>
+                    <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                        <Button type="primary" htmlType="submit">
+                            Опубликовать
+                        </Button>
+                    </Form.Item>
+                </Form>
+
+            </div>
+            <div className="feed_elements">
+                {feedMsgs.map((i) => {
                     return(
-                        <Message key={index} message={message}/>
+                        <FeedElement state ={i}/>
                     )
                 })}
-            </div>
-            <div className="input_area">
-                <Search
-                    placeholder="input search text"
-                    allowClear
-                    enterButton="Send"
-                    size="large"
-                    value={msgValue}
-                    onSearch={onSearch}
-                    onChange={(e) => {setMsgValue(e.target.value)}}
-                />
             </div>
         </div>
     );

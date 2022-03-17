@@ -1,6 +1,20 @@
-.chat{
+.feed{
   width: 100%;
   .messages{
     width: 100%;
+  }
+  &_elements{
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  &_info{
+    &_card{
+      padding: 20px;
+      background: honeydew;
+      width: 100%;
+    }
+    &_container{
+
+    }
   }
 }

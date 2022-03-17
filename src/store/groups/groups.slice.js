@@ -5,7 +5,9 @@ import {errorHandler} from "../../utils/error-handler";
 
 const initialState = {
     groupsLoading: false,
-    groups: []
+    groups: [],
+    groupMessagesLoading: false,
+    groupMessages:[],
 }
 
 
@@ -26,6 +28,7 @@ export const groupsSlice = createSlice({
 
 // Actions
 export const { groupsLoading, groupsReceived } = groupsSlice.actions
+
 
 
 export const fetchGroups = () => async (dispatch) => {
@@ -54,3 +57,4 @@ const selectGroups = createSelector([selectGroupsState], (groups) => {
 export { selectGroupsState, selectGroups};
 
 export default groupsSlice.reducer
+

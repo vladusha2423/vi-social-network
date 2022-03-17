@@ -15,7 +15,7 @@ export const SideBar = () => {
     const dispatch = useDispatch();
     const groups = useSelector(selectGroups);
     const navigate = useNavigate()
-    const [selectedKey, setSelectedKey] = useState("")
+    const [selectedKey, setSelectedKey] = useState(location.search.slice(1))
 
     useEffect(() => {
         console.log(location.pathname)
@@ -27,6 +27,7 @@ export const SideBar = () => {
     useEffect(() => {
         console.log(groups)
     },[groups])
+
 
 
 
@@ -55,7 +56,7 @@ export const SideBar = () => {
                                 onClick={() => {onCLickMenu(i.public_id)}}
                             >
                                 <div className="chat-sidebar__item-content">
-                                    <Avatar width={40} email={i.owner_id} />
+                                    <Avatar width={40} email={i.owner.email} />
                                     <h4 style={{marginBottom: '0'}}>{i.name}</h4>
                                 </div>
                             </Menu.Item>
