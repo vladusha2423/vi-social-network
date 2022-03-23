@@ -1,12 +1,11 @@
 .feed_element{
-  box-shadow: 0px 0px 25px 6px rgba(34, 60, 80, 0.2);
+  box-shadow: 0 0 25px 6px rgba(34, 60, 80, 0.2);
   width: 80%;
   min-height: 100px;
   border:1px solid #f0f2f5;
   border-radius: 10px;
-  margin: auto;
   word-break: break-all;
-  padding: 5px;
   color: black;
-  margin-top: 10px;
+  margin: 10px auto auto;
+  padding: 10px 20px;
 }

@@ -9,11 +9,8 @@ export const FeedElement = (state) => {
 
     return (
         <div className="feed_element">
-            <div className="feed_element">
-                <div className="feed_element_msg_author">{states.title}</div>
-                <div className="feed_element_msg_text">{states.text}</div>
-            </div>
-
+            <h3 className="feed_element_msg_author">{states.title}</h3>
+            <div className="feed_element_msg_text">{states.text}</div>
         </div>
     );
 }
